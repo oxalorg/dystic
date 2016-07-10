@@ -3,7 +3,6 @@ import mistune
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import html
-from jinja2 import FileSystemLoader
 
 
 class HighlightRenderer(mistune.Renderer):
@@ -26,31 +25,31 @@ class Marker:
     INDENTATION = re.compile(r'\n\s{2,}')
     META = re.compile(r'^(\w+):\s*(.*(?:\n\s{2,}.*)*)\n')
 
-    def __init__(self, text):
-        self.metadata, self.text = self.parse_meta(text)
+    def __init__(self):
+        self.renderer = HighlightRenderer()
+        self.markdown = mistune.Markdown(renderer=self.renderer)
 
 
-    def to_html(self):
-        renderer = HighlightRenderer()
-        markdown = mistune.Markdown(renderer=renderer)
-        marked = markdown(self.text)
-        return marked
+    def to_html(self, text):
+        text, metadata = self.extract_meta(text)
+        marked = self.markdown(text)
+        return marked, metadata
 
 
-    def parse_meta(text):
+    def extract_meta(self, text):
         """Parse the given text into metadata and strip it for a Markdown parser.
 
         :param text: text to be parsed
         """
         rv = {}
-        m = META.match(text)
+        m = self.META.match(text)
 
         while m:
             key = m.group(1)
             value = m.group(2)
-            value = INDENTATION.sub('\n', value.strip())
-            rv[key] = value
+            value = self.INDENTATION.sub('\n', value.strip())
+            rv[key.lower()] = value
             text = text[len(m.group(0)):]
-            m = META.match(text)
+            m = self.META.match(text)
 
-        return rv, text
+        return text, rv
