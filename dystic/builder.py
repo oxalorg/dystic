@@ -4,6 +4,7 @@ import os
 import yaml
 from marker import Marker
 from templater import Templater
+from configurator import Configurator
 ROOT_DIR = main.config['ROOT_DIR_PATH']
 
 class Builder:
@@ -12,18 +13,13 @@ class Builder:
     def __init__(self):
         self.tmplt = Templater()
         self.mrk = Marker()
+        self.c = Configurator()
 
     def build_dir(self, folder):
         folder_path = os.path.join(ROOT_DIR, folder)
-        try:
-            default_layout = None
-            with open(os.path.join(folder_path, '_config.yml')) as fp:
-                fconf = yaml.load(fp)
-            default_layout = fconf['layout']
-        except FileNotFoundError:
-            pass
-        if not default_layout:
-            default_layout = 'post.html'
+        conf = self.c.get_conf(folder_path)
+        default_layout = self.c.get_val(folder_path, 'layout')
+        return
         for root, dirs, files in os.walk(folder_path):
             for f in files:
                 # only supports .md files atm
@@ -34,11 +30,10 @@ class Builder:
                     content, metadata = self.mrk.to_html(text)
                     layout = metadata.get('layout', default_layout)
                     out_file = os.path.abspath(os.path.join(root, 'index.html'))
-                    print(out_file)
                     with open(out_file, 'w') as fp:
                         fp.write(self.tmplt.render(content, layout, metadata))
 
 
 if __name__ == '__main__':
-    folder = 'blog'
+    folder = 'blog/june-15'
     Builder().build_dir(folder)
