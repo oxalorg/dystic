@@ -1,11 +1,9 @@
 """
 manages _config.yml file in root folder.
 """
-import main
 import os
 import yaml
-ROOT_DIR_PATH = main.config['ROOT_DIR_PATH']
-
+from config import ROOT_DIR_PATH
 
 class Configurator:
     def __init__(self):
@@ -25,18 +23,18 @@ class Configurator:
             self.conf['site'] = self.conf.pop(os.path.split(ROOT_DIR_PATH)[1])
             return self.conf
         else:
+            # make sure that ROOT_DIR_PATH is set correctly
             return self.get_conf(os.path.abspath(os.path.join(folder_path, os.pardir)))
 
     def get_val(self, folder_path, key):
         folder_path = os.path.abspath(folder_path)
         try:
-            print(folder_path)
             if folder_path == ROOT_DIR_PATH:
                 return self.conf['site'][key]
             return self.conf[os.path.split(folder_path)[1]][key]
         except KeyError:
             if folder_path == ROOT_DIR_PATH:
-                raise SystemExit('The variable you\'re trying to access is not defined.')
+                raise SystemExit('The variable {' + key + '} you\'re trying to access is not defined.')
             return self.get_val(os.path.abspath(os.path.join(folder_path, os.pardir)), key)
         except TypeError:
             raise SystemExit('A base configuration file could not be found!\nMake sure _config.yml file is not empty in your root directory.')
