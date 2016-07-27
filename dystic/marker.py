@@ -1,5 +1,6 @@
 import re
 import mistune
+import yaml
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import html
@@ -35,8 +36,24 @@ class Marker:
         marked = self.markdown(text)
         return marked, metadata
 
-
     def extract_meta(self, text):
+        """Parse the given text into metadata and strip it for a Markdown parser.
+
+        :param text: text to be parsed
+        """
+        try:
+            META = re.compile(r'^((.+\n)*)(\s*\n\s*)+')
+            m = re.split('\n\s*\n', text, maxsplit=1)
+            try:
+                rv = yaml.load(m[0])
+            except:
+                rv = {}
+            text = m[1].strip()
+            return text, rv
+        except (IndexError, AttributeError):
+            raise SystemExit('A file contains illegal metadata/body text. The file looks like:\n' + text[:500])
+
+    def extract_meta2(self, text):
         """Parse the given text into metadata and strip it for a Markdown parser.
 
         :param text: text to be parsed
@@ -53,3 +70,14 @@ class Marker:
             m = self.META.match(text)
 
         return text, rv
+
+if __name__ == '__main__':
+    t = """date: 2015-06-14
+title: Experiments [alpha]
+category: life
+
+I like experiments. They are fun. They give you data. That data gives you an insight into something which would otherwise be extremely hard to recognise.
+
+This is a generic list of the experiments I wish to conduct.
+"""
+    Marker().extract_meta(t)
