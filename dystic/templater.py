@@ -5,10 +5,10 @@ import datetime
 from collections import defaultdict
 
 TEMPLATE_DIR = '_layouts'
-TEMPLATE_DIR_PATH = os.path.abspath(os.path.join(config.ROOT_DIR_PATH, TEMPLATE_DIR))
+TEMPLATE_DIR_PATH = os.path.abspath(os.path.join(config.DYSTIC_DIR, TEMPLATE_DIR))
 
 def datetimeformat(value, format='%H:%M / %d-%m-%Y'):
-    value = datetime.datetime.strptime(value, '%Y-%m-%d')
+    # value = datetime.datetime.strptime(value, '%Y-%m-%d')
     return value.strftime(format)
 
 
