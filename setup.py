@@ -18,6 +18,6 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'dystic=dystic:main',
+            'dystic=dystic:cli',
         ],
     })

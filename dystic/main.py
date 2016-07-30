@@ -28,11 +28,5 @@ def cli():
         raise SystemExit('Please specify a directory.')
 
 
-def main():
-    # with open('_config.yml', 'r') as f:
-    #     config.update(yaml.load(f))
-    cli()
-
-
 if __name__ == '__main__':
-    main()
+    cli()
