@@ -1,7 +1,7 @@
-import main
 import sys
 import os
 import yaml
+from . import main
 from .marker import Marker
 from .templater import Templater
 from .configurator import Configurator
