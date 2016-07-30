@@ -2,12 +2,10 @@ import sys
 import os
 import yaml
 import argparse
-from . import builder
-
-config = {'ROOT_DIR_PATH': os.path.abspath(os.path.dirname(sys.argv[1]))}
 
 
 def build(folder):
+    from . import builder
     b = builder.Builder()
     b.build_dir(folder)
     b.build_index(folder)
@@ -21,7 +19,8 @@ def cli():
     parser.add_argument('-b',
                         '--build',
                         dest='folder',
-                        help="build the specified folder.")
+                        help="build the specified folder.",
+                        required=True)
     args = parser.parse_args()
     if args.folder:
         build(args.folder)
