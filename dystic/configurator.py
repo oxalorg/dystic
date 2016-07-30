@@ -3,7 +3,8 @@ manages _config.yml file in root folder.
 """
 import os
 import yaml
-from config import ROOT_DIR_PATH
+from .config import ROOT_DIR_PATH
+
 
 class Configurator:
     def __init__(self):
@@ -12,7 +13,8 @@ class Configurator:
     def get_conf(self, folder_path):
         folder_path = os.path.abspath(folder_path)
         try:
-            with open(os.path.abspath(os.path.join(folder_path, '_config.yml'))) as fp:
+            with open(os.path.abspath(os.path.join(folder_path,
+                                                   '_config.yml'))) as fp:
                 fconf = yaml.load(fp)
             self.conf[os.path.split(folder_path)[1]] = fconf
         except FileNotFoundError:
@@ -24,7 +26,8 @@ class Configurator:
             return self.conf
         else:
             # make sure that ROOT_DIR_PATH is set correctly
-            return self.get_conf(os.path.abspath(os.path.join(folder_path, os.pardir)))
+            return self.get_conf(os.path.abspath(os.path.join(folder_path,
+                                                              os.pardir)))
 
     def get_val(self, folder_path, key):
         folder_path = os.path.abspath(folder_path)
@@ -34,10 +37,14 @@ class Configurator:
             return self.conf[os.path.split(folder_path)[1]][key]
         except KeyError:
             if folder_path == ROOT_DIR_PATH:
-                raise SystemExit('The variable {' + key + '} you\'re trying to access is not defined.')
-            return self.get_val(os.path.abspath(os.path.join(folder_path, os.pardir)), key)
+                raise SystemExit('The variable {' + key +
+                                 '} you\'re trying to access is not defined.')
+            return self.get_val(
+                os.path.abspath(os.path.join(folder_path, os.pardir)), key)
         except TypeError:
-            raise SystemExit('A base configuration file could not be found!\nMake sure _config.yml file is not empty in your root directory.')
+            raise SystemExit(
+                'A base configuration file could not be found!\nMake sure _config.yml file is not empty in your root directory.')
+
 
 if __name__ == '__main__':
     c = Configurator()

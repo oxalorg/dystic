@@ -2,10 +2,11 @@ import main
 import sys
 import os
 import yaml
-from marker import Marker
-from templater import Templater
-from configurator import Configurator
-from config import ROOT_DIR_PATH
+from .marker import Marker
+from .templater import Templater
+from .configurator import Configurator
+from .config import ROOT_DIR_PATH
+
 
 class Indexer:
     """Indexes the directory to generate list files."""
@@ -58,6 +59,7 @@ class Indexer:
                 parent = parent.get(fold)
             parent[folders[-1]] = subdir
         return nested_dir
+
 
 if __name__ == '__main__':
     import pprint
