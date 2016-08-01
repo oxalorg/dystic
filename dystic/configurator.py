@@ -12,7 +12,7 @@ class Configurator:
         self.aconf = {}
 
     def get_conf(self, folder_path):
-        folder_path = os.path.abspath(folder_path)
+        print(folder_path)
         try:
             with open(os.path.abspath(os.path.join(folder_path,
                                                    '_config.yml'))) as fp:
@@ -37,11 +37,11 @@ class Configurator:
     def get_val(self, folder_path, key):
         folder_path = os.path.abspath(folder_path)
         try:
-            if folder_path == ROOT_DIR_PATH:
+            if folder_path == self.ROOT_DIR_PATH:
                 return self.conf['site'][key]
             return self.conf[os.path.split(folder_path)[1]][key]
         except KeyError:
-            if folder_path == ROOT_DIR_PATH:
+            if folder_path == self.ROOT_DIR_PATH:
                 raise SystemExit('The variable {' + key +
                                  '} you\'re trying to access is not defined.')
             return self.get_val(

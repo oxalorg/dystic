@@ -12,14 +12,14 @@ class Builder:
     """Builds the directory to generate html files."""
 
     def __init__(self, ROOT_DIR_PATH):
-        self.tmplt = Templater()
+        self.ROOT_DIR_PATH = os.path.abspath(ROOT_DIR_PATH)
         self.mrk = Marker()
-        self.ROOT_DIR_PATH = ROOT_DIR_PATH
+        self.tmplt = Templater(self.ROOT_DIR_PATH)
         self.c = Configurator(self.ROOT_DIR_PATH)
         self.indx = Indexer(self.ROOT_DIR_PATH)
 
     def build_dir(self, folder):
-        folder_path = os.path.join(self.ROOT_DIR_PATH, folder)
+        folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
         print('Building folder: ' + folder_path)
         conf = self.c.get_conf(folder_path)
         default_layout = self.c.get_val(folder_path, 'layout')
@@ -33,8 +33,7 @@ class Builder:
                     content, metadata = self.mrk.to_html(text)
                     conf.update(metadata)
                     layout = metadata.get('layout', default_layout)
-                    out_file = os.path.abspath(os.path.join(root,
-                                                            'index.html'))
+                    out_file = os.path.abspath(os.path.join(root, 'index.html'))
                     with open(out_file, 'w') as fp:
                         fp.write(self.tmplt.render(content, layout, metadata))
                     print('File written: ' + os.path.basename(root))
@@ -67,8 +66,7 @@ class Builder:
                 if post:
                     # It's a single post
                     print('Found a post: ' + post['title'])
-                    if post['title'].startswith('"') and post[
-                            'title'].endswith('"'):
+                    if post['title'].startswith('"') and post['title'].endswith('"'):
                         post['title'] = post['title'][1:-1]
                     post['slug'] = d
                     index['posts'].append(post)
@@ -80,13 +78,11 @@ class Builder:
                 # print(root, utils.sort_list_dict(index['posts']))
                 out_file = os.path.abspath(os.path.join(root, 'index.html'))
                 with open(out_file, 'w') as fp:
-                    fp.write(self.tmplt.render(
-                        '',
-                        'index',
-                        posts=utils.sort_list_dict(index['posts']),
-                        collections=index['collections']))
-                print('File written: ' + os.path.abspath(os.path.basename(
-                    root)))
+                    fp.write(self.tmplt.render('',
+                                               'index',
+                                               posts=utils.sort_list_dict(index['posts']),
+                                               collections=index['collections']))
+                print('File written: ' + os.path.abspath(os.path.basename(root)))
         return index
 
 
