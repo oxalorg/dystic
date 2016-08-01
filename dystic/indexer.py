@@ -38,7 +38,7 @@ class Indexer:
         Creates a nested dictionary that represents the folder structure of folder.
         Also extracts meta data from all markdown posts and adds to the dictionary.
         """
-        folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
+        folder_path = folder
         print('Indexing folder: ' + folder_path)
         nested_dir = {}
         folder = folder_path.rstrip(os.sep)

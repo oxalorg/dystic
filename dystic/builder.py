@@ -32,16 +32,16 @@ class Builder:
                         text = fp.read()
                     content, metadata = self.mrk.to_html(text)
                     conf.update(metadata)
-                    layout = metadata.get('layout', default_layout)
+                    layout = conf.get('layout', default_layout)
                     out_file = os.path.abspath(os.path.join(root, 'index.html'))
                     with open(out_file, 'w') as fp:
-                        fp.write(self.tmplt.render(content, layout, metadata))
+                        fp.write(self.tmplt.render(content, layout, conf))
                     print('File written: ' + os.path.basename(root))
 
     def build_index(self, folder):
-        from pprint import pprint
-        folder_path = os.path.join(self.ROOT_DIR_PATH, folder)
+        folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
         nested_dir = self.indx.index_dir(folder_path)
+        conf = self.c.get_conf(folder_path)
         # if consequitive directory, file.md does not exists
         #   list the folder name
         # else
@@ -49,7 +49,6 @@ class Builder:
         default_layout = 'index.html'
         folder = folder_path.rstrip(os.sep)
         start = folder.rfind(os.sep) + 1
-        pprint(folder + '' + str(start))
         for root, dirs, files in os.walk(folder_path):
             index = {'posts': [], 'collections': []}
             folders = root[start:].split(os.sep)
@@ -65,24 +64,24 @@ class Builder:
                     pass
                 if post:
                     # It's a single post
-                    print('Found a post: ' + post['title'])
+                    # print('Found a post: ' + post['title'])
                     if post['title'].startswith('"') and post['title'].endswith('"'):
                         post['title'] = post['title'][1:-1]
                     post['slug'] = d
                     index['posts'].append(post)
                 elif not d.startswith('_'):
                     # It's a collection of posts
-                    print('Found a collection: ' + d)
+                    # print('Found a collection: ' + d)
                     index['collections'].append({'title': d, 'slug': d})
             if index['posts'] or index['collections']:
                 # print(root, utils.sort_list_dict(index['posts']))
                 out_file = os.path.abspath(os.path.join(root, 'index.html'))
+                aconf = {}
+                aconf.update(conf)
+                aconf.update({'posts': utils.sort_list_dict(index['posts']), 'collections': index['collections']})
                 with open(out_file, 'w') as fp:
-                    fp.write(self.tmplt.render('',
-                                               'index',
-                                               posts=utils.sort_list_dict(index['posts']),
-                                               collections=index['collections']))
-                print('File written: ' + os.path.abspath(os.path.basename(root)))
+                    fp.write(self.tmplt.render('', 'index', aconf))
+                print('Index written: ' + os.path.abspath(os.path.basename(root)))
         return index
 
 
