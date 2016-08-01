@@ -3,12 +3,13 @@ manages _config.yml file in root folder.
 """
 import os
 import yaml
-from .config import ROOT_DIR_PATH
 
 
 class Configurator:
-    def __init__(self):
+    def __init__(self, ROOT_DIR_PATH):
+        self.ROOT_DIR_PATH = ROOT_DIR_PATH
         self.conf = {}
+        self.aconf = {}
 
     def get_conf(self, folder_path):
         folder_path = os.path.abspath(folder_path)
@@ -17,13 +18,17 @@ class Configurator:
                                                    '_config.yml'))) as fp:
                 fconf = yaml.load(fp)
             self.conf[os.path.split(folder_path)[1]] = fconf
+            for k in fconf:
+                if k not in self.aconf:
+                    self.aconf[k] = fconf[k]
         except FileNotFoundError:
             pass
         # recursively get conf for every folder until ROOT folder.
-        if folder_path == ROOT_DIR_PATH:
+        if folder_path == self.ROOT_DIR_PATH:
             # can lead to problems if a folder named 'site' is present
-            self.conf['site'] = self.conf.pop(os.path.split(ROOT_DIR_PATH)[1])
-            return self.conf
+            self.conf['site'] = self.conf.pop(os.path.split(
+                self.ROOT_DIR_PATH)[1])
+            return self.aconf
         else:
             # make sure that ROOT_DIR_PATH is set correctly
             return self.get_conf(os.path.abspath(os.path.join(folder_path,
@@ -47,7 +52,10 @@ class Configurator:
 
 
 if __name__ == '__main__':
-    c = Configurator()
-    d = c.get_conf(os.path.join(ROOT_DIR_PATH, 'blog', 'june-15'))
-    e = c.get_val(os.path.join(ROOT_DIR_PATH, 'blog', 'june-15'), 'layout')
-    print(d, e)
+    ROOT_DIR_PATH = os.path.join(os.getcwd(), 'personalBlog')
+    c = Configurator(ROOT_DIR_PATH)
+    # d = c.get_conf(os.path.join(ROOT_DIR_PATH, 'blog', 'june-15'))
+    # e = c.get_val(os.path.join('personalBlog', 'blog', 'june-15'), 'layout')
+    d = c.get_conf(os.path.join(ROOT_DIR_PATH, 'blog', 'experiments'))
+    print(d)
+    print(c.conf)

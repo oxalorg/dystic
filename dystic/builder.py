@@ -6,20 +6,20 @@ from .marker import Marker
 from .templater import Templater
 from .configurator import Configurator
 from .indexer import Indexer
-from .config import ROOT_DIR_PATH
 
 
 class Builder:
     """Builds the directory to generate html files."""
 
-    def __init__(self):
+    def __init__(self, ROOT_DIR_PATH):
         self.tmplt = Templater()
         self.mrk = Marker()
-        self.c = Configurator()
-        self.indx = Indexer()
+        self.ROOT_DIR_PATH = ROOT_DIR_PATH
+        self.c = Configurator(self.ROOT_DIR_PATH)
+        self.indx = Indexer(self.ROOT_DIR_PATH)
 
     def build_dir(self, folder):
-        folder_path = os.path.join(ROOT_DIR_PATH, folder)
+        folder_path = os.path.join(self.ROOT_DIR_PATH, folder)
         print('Building folder: ' + folder_path)
         conf = self.c.get_conf(folder_path)
         default_layout = self.c.get_val(folder_path, 'layout')
@@ -31,6 +31,7 @@ class Builder:
                     with open(in_file, 'r') as fp:
                         text = fp.read()
                     content, metadata = self.mrk.to_html(text)
+                    conf.update(metadata)
                     layout = metadata.get('layout', default_layout)
                     out_file = os.path.abspath(os.path.join(root,
                                                             'index.html'))
@@ -40,7 +41,7 @@ class Builder:
 
     def build_index(self, folder):
         from pprint import pprint
-        folder_path = os.path.join(ROOT_DIR_PATH, folder)
+        folder_path = os.path.join(self.ROOT_DIR_PATH, folder)
         nested_dir = self.indx.index_dir(folder_path)
         # if consequitive directory, file.md does not exists
         #   list the folder name

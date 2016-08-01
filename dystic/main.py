@@ -4,14 +4,6 @@ import yaml
 import argparse
 
 
-def build(folder):
-    from . import builder
-    b = builder.Builder()
-    b.build_dir(folder)
-    b.build_index(folder)
-    b.build_index(os.path.join(folder, os.pardir))
-
-
 def cli():
     parser = argparse.ArgumentParser(
         description='Simple dynamically static blog generator.',
@@ -21,11 +13,25 @@ def cli():
                         dest='folder',
                         help="build the specified folder.",
                         required=True)
+    parser.add_argument(
+        '-r',
+        '--root',
+        dest='root',
+        help="specify the root folder, defaults to current working directory.",
+        default=os.getcwd())
     args = parser.parse_args()
     if args.folder:
-        build(args.folder)
+        build(args.root, args.folder)
     else:
         raise SystemExit('Please specify a directory.')
+
+
+def build(root, folder):
+    from . import builder
+    b = builder.Builder(root)
+    b.build_dir(folder)
+    b.build_index(folder)
+    b.build_index(os.path.join(folder, os.pardir))
 
 
 if __name__ == '__main__':

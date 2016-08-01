@@ -5,16 +5,14 @@ from . import main
 from .marker import Marker
 from .templater import Templater
 from .configurator import Configurator
-from .config import ROOT_DIR_PATH
 
 
 class Indexer:
     """Indexes the directory to generate list files."""
 
-    def __init__(self):
-        self.tmplt = Templater()
+    def __init__(self, ROOT_DIR_PATH):
         self.mrk = Marker()
-        self.c = Configurator()
+        self.ROOT_DIR_PATH = ROOT_DIR_PATH
 
     # def index_dir(self, folder):
     #     folder_path = os.path.join(ROOT_DIR_PATH, folder)
@@ -40,10 +38,10 @@ class Indexer:
         Creates a nested dictionary that represents the folder structure of folder.
         Also extracts meta data from all markdown posts and adds to the dictionary.
         """
-        folder_path = os.path.join(ROOT_DIR_PATH, folder)
+        folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
         print('Indexing folder: ' + folder_path)
         nested_dir = {}
-        folder = folder.rstrip(os.sep)
+        folder = folder_path.rstrip(os.sep)
         start = folder.rfind(os.sep) + 1
         for root, dirs, files in os.walk(folder):
             folders = root[start:].split(os.sep)
@@ -63,4 +61,6 @@ class Indexer:
 
 if __name__ == '__main__':
     import pprint
-    pprint.pprint(Indexer().index_dir('.'))
+    pb = os.path.join(os.getcwd(), 'personalBlog')
+    bl = os.path.join(os.getcwd(), 'personalBlog', 'blog', 'june-15')
+    pprint.pprint(Indexer(pb).index_dir(bl))
