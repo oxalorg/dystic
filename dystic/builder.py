@@ -37,7 +37,7 @@ class Builder:
                     out_file = os.path.abspath(os.path.join(root, 'index.html'))
                     with open(out_file, 'w') as fp:
                         fp.write(self.tmplt.render(content, layout, conf))
-                    print('File written: ' + os.path.basename(root))
+                    print('File written: ' + out_file)
 
     def build_index(self, folder):
         folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
@@ -47,14 +47,14 @@ class Builder:
         #   list the folder name
         # else
         #   list the file title and date
-        if list(filter(re.compile(r'.*\.md$').match, os.listdir(folder_path))):
-            print("This is a post. Skipping index generation.")
-            return
         default_layout = 'index.html'
         folder = folder_path.rstrip(os.sep)
         start = folder.rfind(os.sep) + 1
         for root, dirs, files in os.walk(folder_path):
             index = {'posts': [], 'collections': []}
+            if list(filter(re.compile(r'.*\.md$').match, files)):
+                print("Skipping index generation for post: {}".format(root))
+                continue
             folders = root[start:].split(os.sep)
             parent = nested_dir
             for fold in folders[:-1]:
@@ -69,8 +69,11 @@ class Builder:
                 if post:
                     # It's a single post
                     # print('Found a post: ' + post['title'])
-                    if post['title'].startswith('"') and post['title'].endswith('"'):
-                        post['title'] = post['title'][1:-1]
+                    try:
+                        if post['title'].startswith('"') and post['title'].endswith('"'):
+                            post['title'] = post['title'][1:-1]
+                    except AttributeError:
+                        post['title'] = str(post['title'])
                     post['slug'] = d
                     index['posts'].append(post)
                 elif not d.startswith('_'):
@@ -85,7 +88,7 @@ class Builder:
                 aconf.update({'posts': utils.sort_list_dict(index['posts']), 'collections': index['collections']})
                 with open(out_file, 'w') as fp:
                     fp.write(self.tmplt.render('', 'index', aconf))
-                print('Index written: ' + os.path.abspath(os.path.basename(root)))
+                print('Index written: ' + out_file)
         return index
 
 
