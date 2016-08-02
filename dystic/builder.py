@@ -1,6 +1,7 @@
 import sys
 import os
 import yaml
+import re
 from . import utils
 from .marker import Marker
 from .templater import Templater
@@ -46,6 +47,9 @@ class Builder:
         #   list the folder name
         # else
         #   list the file title and date
+        if list(filter(re.compile(r'.*\.md$').match, os.listdir(folder_path))):
+            print("This is a post. Skipping index generation.")
+            return
         default_layout = 'index.html'
         folder = folder_path.rstrip(os.sep)
         start = folder.rfind(os.sep) + 1
