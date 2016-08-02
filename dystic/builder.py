@@ -28,7 +28,7 @@ class Builder:
                 # only supports .md files atm
                 if os.path.splitext(f) == (os.path.basename(root), '.md'):
                     in_file = os.path.abspath(os.path.join(root, f))
-                    with open(in_file, 'r') as fp:
+                    with open(in_file, 'r', encoding='utf-8') as fp:
                         text = fp.read()
                     content, metadata = self.mrk.to_html(text)
                     conf.update(metadata)

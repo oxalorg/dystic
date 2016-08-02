@@ -49,7 +49,7 @@ class Indexer:
             subdir = {}
             for f in files:
                 if f == os.path.basename(root) + '.md':
-                    with open(os.path.abspath(os.path.join(root, f))) as fp:
+                    with open(os.path.abspath(os.path.join(root, f)), encoding='utf-8') as fp:
                         _, meta = self.mrk.extract_meta(fp.read())
                     subdir[f] = meta
             parent = nested_dir
