@@ -1,1 +1,4 @@
 Minimal static site generator specialized for blogging.
+
+Please read the [development_references](https://github.com/MiteshNinja/dystic/blob/master/development_reference.md) to understand
+how dystic works. Atleast until I add some goddamn useful README.
