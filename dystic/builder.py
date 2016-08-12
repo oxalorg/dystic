@@ -35,7 +35,7 @@ class Builder:
                     conf.update(metadata)
                     layout = conf.get('layout', default_layout)
                     out_file = os.path.abspath(os.path.join(root, 'index.html'))
-                    with open(out_file, 'w') as fp:
+                    with open(out_file, 'w', encoding='utf-8', errors='replace') as fp:
                         fp.write(self.tmplt.render(content, layout, conf))
                     print('File written: ' + out_file)
 
@@ -86,7 +86,7 @@ class Builder:
                 aconf = {}
                 aconf.update(conf)
                 aconf.update({'posts': utils.sort_list_dict(index['posts']), 'collections': index['collections']})
-                with open(out_file, 'w') as fp:
+                with open(out_file, 'w', encoding='utf-8', errors='replace') as fp:
                     fp.write(self.tmplt.render('', 'index', aconf))
                 print('Index written: ' + out_file)
         return index
