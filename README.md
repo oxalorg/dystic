@@ -1,6 +1,6 @@
-Minimal static site generator specialized for blogging.
+# dystic
 
-how dystic works. Atleast until I add some goddamn useful README.
+Minimal static site generator specialized for blogging.
 
 ## Installation
 
@@ -11,6 +11,27 @@ pip3 install dystic
 Currently tested on Ubuntu 14.04, 16.04, and OSX.
 
 ## Usage
+
+```
+dystic -r <root folder of your blog> -b <the folder you want to build relative to root>
+```
+
+**Examples:**
+
+```
+# Build entire root folder
+dystic -r ~/my-blog -b .
+
+# Builds a only dummy.com/blog
+dystic -r ~/my-blog -b blog
+
+# Builds only a specific post of a nested collection
+dystic -r ~/my-blog -b o/reviews/food/dunkin-donuts/simply-potato
+```
+
+## Philosophy
+
+Example directory:
 
 ```
 .
@@ -74,23 +95,19 @@ This is a sample directory of how dystic looks. You simply create the directory 
 
 You can mention configuration options in `_config.yml` in any post or collection, and it will be local to it. This leads to nested overwrittable configurations.
 
-## Usage
+## Dependencies
 
-```
-dystic -r <root folder of your blog> -b <the folder you want to build relative to root> 
-```
+- mistune
+- pygments
+- PyYaml
+- Jinja2
 
-**Examples:**
+## Contributors
 
-```
-# Build entire root folder
-dystic -r ~/my-blog -b .
+- [Mitesh Shah](miteshshah.com)
 
-# Builds a only dummy.com/blog
-dystic -r ~/my-blog -b blog
+## License
 
-# Builds only a specific post of a nested collection
-dystic -r ~/my-blog -b o/reviews/food/dunkin-donuts/simply-potato
-```
+MIT License
 
-
+Copyright (c) 2016 Mitesh Shah
