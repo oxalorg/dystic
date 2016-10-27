@@ -2,6 +2,12 @@
 
 Minimal static site generator specialized for blogging.
 
+## NOTE
+
+v0.X.X - Supports a subset of functionality.
+v1.X.X - Will introduce major changes, mainly to the structure
+ and index generation.
+
 ## Installation
 
 ```
@@ -91,9 +97,17 @@ Example directory:
         └── this-is-a-test.md
 ```
 
-This is a sample directory of how dystic looks. You simply create the directory based on how you want to see the URL. It will automatically parse all ".md" files and add a "index.html" file in the same directory. To understand the philosophy behind it please read the [development_references](https://github.com/MiteshNinja/dystic/blob/master/development_reference.md).
+This is a sample directory of how dystic looks. You
+simply create the directory based on how you want to see
+the URL. It will automatically parse all ".md" files
+and add a "index.html" file in the same directory. To
+understand the philosophy behind it please read the
+[development_references](https://github.com/MiteshNinja/dystic
+/blob/master/development_reference.md).
 
-You can mention configuration options in `_config.yml` in any post or collection, and it will be local to it. This leads to nested overwrittable configurations.
+You can mention configuration options in `_config.yml` in any
+post or collection, and it will be local to it. This leads to
+nested overwrittable configurations.
 
 ## Dependencies
 
