@@ -4,15 +4,12 @@ Minimal static site generator specialized for blogging.
 
 **NOTE**
 
-v0.X.X 
+* v0.X.X  
     - Supports a subset of functionality.  
-
-v1.X.X  
+* v1.X.X  
     - Will introduce major changes, mainly to the structure
-      and index generation.
-    - Read [development_references-v1](https://github.com/MiteshNinja/dystic
-/blob/master/development_reference-v1.md) for changes is
-dystic-v1.
+      and index generation.  
+    - Read [development_references-v1](https://github.com/oxalorg/dystic/blob/master/development_reference-v1.md) for changes is dystic-v1.
 
 ## Installation
 
@@ -108,11 +105,9 @@ simply create the directory based on how you want to see
 the URL. It will automatically parse all ".md" files
 and add a "index.html" file in the same directory. To
 understand the philosophy behind it please read the
-[development_references](https://github.com/MiteshNinja/dystic
-/blob/master/development_reference.md).
+[development_references](https://github.com/oxalorg/dystic/blob/master/development_reference.md).
 
-**NOTE**: Read [development_references-v1](https://github.com/MiteshNinja/dystic
-/blob/master/development_reference-v1.md) for changes is
+**NOTE**: Read [development_references-v1](https://github.com/oxalorg/dystic/blob/master/development_reference-v1.md) for changes is
 dystic-v1.
 
 You can mention configuration options in `_config.yml` in any
@@ -128,7 +123,7 @@ nested overwrittable configurations.
 
 ## Contributors
 
-- [Mitesh Shah](miteshshah.com)
+- oxalorg - [https://oxal.org](https://oxal.org)
 
 ## License
 
