@@ -1,3 +1,5 @@
 venv/
 personalBlog/
 __pycache__
+build/
+dystic.egg-info/
