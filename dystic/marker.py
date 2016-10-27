@@ -23,13 +23,10 @@ class Marker:
     """
     Takes in markdown text, returns metadata and html contents.
     """
-    INDENTATION = re.compile(r'\n\s{2,}')
-    META = re.compile(r'^(\w+):\s*(.*(?:\n\s{2,}.*)*)\n')
 
     def __init__(self):
         self.renderer = HighlightRenderer()
         self.markdown = mistune.Markdown(renderer=self.renderer)
-
 
     def to_html(self, text):
         text, metadata = self.extract_meta(text)
@@ -37,47 +34,49 @@ class Marker:
         return marked, metadata
 
     def extract_meta(self, text):
-        """Parse the given text into metadata and strip it for a Markdown parser.
-
-        :param text: text to be parsed
         """
-        try:
-            META = re.compile(r'^((.+\n)*)(\s*\n\s*)+')
-            m = re.split('\n\s*\n', text, maxsplit=1)
-            try:
-                rv = yaml.load(m[0])
-            except:
-                rv = {}
-            text = m[1].strip()
-            return text, rv
-        except (IndexError, AttributeError):
-            raise SystemExit('A file contains illegal metadata/body text. The file looks like:\n' + text[:500])
-
-    def extract_meta2(self, text):
-        """Parse the given text into metadata and strip it for a Markdown parser.
-
-        :param text: text to be parsed
+        Takes input as the entire file.
+        Reads the first yaml document as metadata,
+        and the rest of the document as text
         """
-        rv = {}
-        m = self.META.match(text)
+        first_line = True
+        metadata = []
+        content = []
+        metadata_parsed = False
 
-        while m:
-            key = m.group(1)
-            value = m.group(2)
-            value = self.INDENTATION.sub('\n', value.strip())
-            rv[key.lower()] = value
-            text = text[len(m.group(0)):]
-            m = self.META.match(text)
+        for line in text.split('\n'):
+            if line.strip() == '' and not metadata_parsed:
+                continue
+            if line.strip() == '---' and not metadata_parsed:
+                if first_line:
+                    first_line = False
+                    continue
+                # reached the last line
+                metadata_parsed = True
+            elif not metadata_parsed:
+                metadata.append(line)
+            else:
+                content.append(line)
 
-        return text, rv
+        metadata = yaml.load('\n'.join(metadata))
+        return '\n'.join(content), metadata 
+
 
 if __name__ == '__main__':
-    t = """date: 2015-06-14
+    t = """
+---
+date: 2015-06-14
 title: Experiments [alpha]
 category: life
+---
 
-I like experiments. They are fun. They give you data. That data gives you an insight into something which would otherwise be extremely hard to recognise.
+I like experiments. 
+They are fun. 
+They give you data. 
+
+---
 
 This is a generic list of the experiments I wish to conduct.
 """
-    Marker().extract_meta(t)
+    a, b = Marker().extract_meta(t)
+    print(b)
