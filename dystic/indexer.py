@@ -14,25 +14,6 @@ class Indexer:
         self.mrk = Marker()
         self.ROOT_DIR_PATH = ROOT_DIR_PATH
 
-    # def index_dir(self, folder):
-    #     folder_path = os.path.join(ROOT_DIR_PATH, folder)
-    #     print('Indexing folder: ' + folder_path)
-    #     for root, dirs, files in os.walk(folder_path):
-    #         if os.path.basename(root) + '.md' not in files:
-    #             # calculate index titles and dates
-    #
-    #             layout = 'index.html'
-    #             out_file = os.path.abspath(os.path.join(root, 'index.html'))
-    #             with open(out_file, 'w') as fp:
-    #                 fp.write(self.tmplt.render('', layout, metadata))
-    #                 print('Index written: ' + os.path.basename(root))
-    #
-    #                 in_file = os.path.abspath(os.path.join(root, f))
-    #                 with open(in_file, 'r') as fp:
-    #                     text = fp.read()
-    #                 content, metadata = self.mrk.to_html(text)
-    #                 layout = metadata.get('layout', default_layout)
-
     def index_dir(self, folder):
         """
         Creates a nested dictionary that represents the folder structure of folder.

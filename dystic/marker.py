@@ -36,7 +36,7 @@ class Marker:
     def extract_meta(self, text):
         """
         Takes input as the entire file.
-        Reads the first yaml document as metadata,
+        Reads the first yaml document as metadata.
         and the rest of the document as text
         """
         first_line = True
