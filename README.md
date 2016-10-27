@@ -2,11 +2,17 @@
 
 Minimal static site generator specialized for blogging.
 
-## NOTE
+**NOTE**
 
-v0.X.X - Supports a subset of functionality.
-v1.X.X - Will introduce major changes, mainly to the structure
- and index generation.
+v0.X.X 
+    - Supports a subset of functionality.  
+
+v1.X.X  
+    - Will introduce major changes, mainly to the structure
+      and index generation.
+    - Read [development_references-v1](https://github.com/MiteshNinja/dystic
+/blob/master/development_reference-v1.md) for changes is
+dystic-v1.
 
 ## Installation
 
@@ -104,6 +110,10 @@ and add a "index.html" file in the same directory. To
 understand the philosophy behind it please read the
 [development_references](https://github.com/MiteshNinja/dystic
 /blob/master/development_reference.md).
+
+**NOTE**: Read [development_references-v1](https://github.com/MiteshNinja/dystic
+/blob/master/development_reference-v1.md) for changes is
+dystic-v1.
 
 You can mention configuration options in `_config.yml` in any
 post or collection, and it will be local to it. This leads to
