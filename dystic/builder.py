@@ -26,15 +26,23 @@ class Builder:
         default_layout = self.c.get_val(folder_path, 'layout')
         for root, dirs, files in os.walk(folder_path):
             for f in files:
+                # Is the post a containment inside the folder
+                # i.e. same name as parent folder or not
+                post_folder = False
                 # only supports .md files atm
-                if os.path.splitext(f) == (os.path.basename(root), '.md'):
+                if os.path.splitext(f)[1] == '.md':
+                    print('Considering: ' + f)
+                    if os.path.splitext(f)[0] == os.path.basename(root):
+                        post_folder = True
                     in_file = os.path.abspath(os.path.join(root, f))
                     with open(in_file, 'r', encoding='utf-8') as fp:
                         text = fp.read()
                     content, metadata = self.mrk.to_html(text)
                     conf.update(metadata)
                     layout = conf.get('layout', default_layout)
-                    out_file = os.path.abspath(os.path.join(root, 'index.html'))
+                    out_file = os.path.abspath(
+                                os.path.join(root, \
+                                'index.html' if post_folder else os.path.splitext(f)[0] + '.html'))
                     with open(out_file, 'w', encoding='utf-8', errors='replace') as fp:
                         fp.write(self.tmplt.render(content, layout, conf))
                     print('File written: ' + out_file)
@@ -93,6 +101,6 @@ class Builder:
 
 
 if __name__ == '__main__':
-    folder = '.'
-    Builder().build_dir(folder)
-    Builder().build_index(folder)
+    folder = 'Aphrodite'
+    Builder('./personalBlog').build_dir(folder)
+    # Builder('./personalBlog').build_index(folder)
