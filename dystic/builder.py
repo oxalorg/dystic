@@ -60,7 +60,8 @@ class Builder:
         start = folder.rfind(os.sep) + 1
         for root, dirs, files in os.walk(folder_path):
             index = {'posts': [], 'collections': []}
-            if list(filter(re.compile(r'.*\.md$').match, files)):
+            dir_post = os.path.basename(root) + '.md'
+            if 'index.md' in files or dir_post in files:
                 print("Skipping index generation for post: {}".format(root))
                 continue
             folders = root[start:].split(os.sep)
@@ -68,6 +69,13 @@ class Builder:
             for fold in folders[:-1]:
                 parent = parent.get(fold)
             parent = parent[folders[-1]]
+            # Find the standalone .md posts
+            for f in files:
+                if os.path.splitext(f)[1] == '.md' and parent[f]:
+                    post = parent[f]
+                    post['slug'] = os.path.splitext(f)[0]
+                    index['posts'].append(post)
+            # Find bulkier notes and collections
             for d in dirs:
                 post = None
                 try:
@@ -103,4 +111,4 @@ class Builder:
 if __name__ == '__main__':
     folder = 'Aphrodite'
     Builder('./personalBlog').build_dir(folder)
-    # Builder('./personalBlog').build_index(folder)
+    Builder('./personalBlog').build_index(folder)

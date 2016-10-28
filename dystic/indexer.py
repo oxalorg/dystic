@@ -29,13 +29,15 @@ class Indexer:
             # subdir = dict.fromkeys(files)
             subdir = {}
             for f in files:
-                if f == os.path.basename(root) + '.md':
+                # Create an entry for every markdown file
+                if os.path.splitext(f)[1] == '.md':
                     with open(os.path.abspath(os.path.join(root, f)), encoding='utf-8') as fp:
                         _, meta = self.mrk.extract_meta(fp.read())
                     subdir[f] = meta
             parent = nested_dir
             for fold in folders[:-1]:
                 parent = parent.get(fold)
+            # Attach the config of all children nodes onto the parent
             parent[folders[-1]] = subdir
         return nested_dir
 
@@ -43,5 +45,5 @@ class Indexer:
 if __name__ == '__main__':
     import pprint
     pb = os.path.join(os.getcwd(), 'personalBlog')
-    bl = os.path.join(os.getcwd(), 'personalBlog', 'blog', 'june-15')
+    bl = os.path.join(os.getcwd(), 'personalBlog', 'blog')
     pprint.pprint(Indexer(pb).index_dir(bl))
