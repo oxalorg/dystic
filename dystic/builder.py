@@ -37,14 +37,20 @@ class Builder:
                     in_file = os.path.abspath(os.path.join(root, f))
                     with open(in_file, 'r', encoding='utf-8') as fp:
                         text = fp.read()
-                    content, metadata = self.mrk.to_html(text)
-                    conf.update(metadata)
-                    layout = conf.get('layout', default_layout)
+                    try:
+                        content, metadata = self.mrk.to_html(text)
+                    except:
+                        print("Skipping file: " + in_file + " ; Metadata invalid.")
+                        continue
+                    fconf = conf.copy()
+                    fconf.update(metadata)
+                    layout = fconf.get('layout', default_layout)
+                    print(f, layout, fconf)
                     out_file = os.path.abspath(
                                 os.path.join(root, \
                                 'index.html' if post_folder else os.path.splitext(f)[0] + '.html'))
                     with open(out_file, 'w', encoding='utf-8', errors='replace') as fp:
-                        fp.write(self.tmplt.render(content, layout, conf))
+                        fp.write(self.tmplt.render(content, layout, fconf))
                     print('File written: ' + out_file)
 
     def build_index(self, folder):
@@ -73,6 +79,8 @@ class Builder:
             for f in files:
                 if os.path.splitext(f)[1] == '.md' and parent[f]:
                     post = parent[f]
+                    if not post.get('title', None) or not post.get('date', None):
+                        continue
                     post['slug'] = os.path.splitext(f)[0]
                     index['posts'].append(post)
             # Find bulkier notes and collections
@@ -92,7 +100,7 @@ class Builder:
                         post['title'] = str(post['title'])
                     post['slug'] = d
                     index['posts'].append(post)
-                elif not d.startswith('_'):
+                elif not d.startswith('_') or d != 'res':
                     # It's a collection of posts
                     # print('Found a collection: ' + d)
                     index['collections'].append({'title': d, 'slug': d})

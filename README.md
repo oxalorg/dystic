@@ -11,13 +11,25 @@ Minimal static site generator specialized for blogging.
       and index generation.  
     - Read [development_references-v1](https://github.com/oxalorg/dystic/blob/master/development_reference-v1.md) for changes is dystic-v1.
 
-## Installation
+## Quickstart
+
+**Installation**:
 
 ```
 pip3 install dystic
 ```
 
-Currently tested on Ubuntu 14.04, 16.04, and OSX.
+*Currently tested on Ubuntu 14.04, 16.04, and OSX.*
+
+**Setup**:
+
+```
+mkdir my-notes
+cd my-notes
+
+```
+
+
 
 ## Usage
 
@@ -38,7 +50,7 @@ dystic -r ~/my-blog -b blog
 dystic -r ~/my-blog -b o/reviews/food/dunkin-donuts/simply-potato
 ```
 
-## Philosophy
+## Example
 
 Example directory:
 
@@ -113,13 +125,6 @@ dystic-v1.
 You can mention configuration options in `_config.yml` in any
 post or collection, and it will be local to it. This leads to
 nested overwrittable configurations.
-
-## Dependencies
-
-- mistune
-- pygments
-- PyYaml
-- Jinja2
 
 ## Contributors
 

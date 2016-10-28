@@ -5,6 +5,9 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import html
 
+class MetaParseException(Exception):
+    pass
+
 
 class HighlightRenderer(mistune.Renderer):
     """
@@ -29,7 +32,10 @@ class Marker:
         self.markdown = mistune.Markdown(renderer=self.renderer)
 
     def to_html(self, text):
-        text, metadata = self.extract_meta(text)
+        try:
+            text, metadata = self.extract_meta(text)
+        except:
+            raise
         marked = self.markdown(text)
         return marked, metadata
 
@@ -45,12 +51,15 @@ class Marker:
         metadata_parsed = False
 
         for line in text.split('\n'):
+            if first_line:
+                first_line = False
+                if line.strip() != '---':
+                    raise MetaParseException('Invalid metadata')
+                else:
+                    continue
             if line.strip() == '' and not metadata_parsed:
                 continue
             if line.strip() == '---' and not metadata_parsed:
-                if first_line:
-                    first_line = False
-                    continue
                 # reached the last line
                 metadata_parsed = True
             elif not metadata_parsed:
@@ -58,8 +67,15 @@ class Marker:
             else:
                 content.append(line)
 
-        metadata = yaml.load('\n'.join(metadata))
-        return '\n'.join(content), metadata 
+        content = '\n'.join(content)
+        try:
+            metadata = yaml.load('\n'.join(metadata))
+        except:
+            raise
+            content = text
+            metadata = yaml.load('')
+
+        return content, metadata 
 
 
 if __name__ == '__main__':

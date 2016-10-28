@@ -32,7 +32,13 @@ class Indexer:
                 # Create an entry for every markdown file
                 if os.path.splitext(f)[1] == '.md':
                     with open(os.path.abspath(os.path.join(root, f)), encoding='utf-8') as fp:
-                        _, meta = self.mrk.extract_meta(fp.read())
+                        try:
+                            _, meta = self.mrk.extract_meta(fp.read())
+                        except:
+                            print("Skipping indexing " + f +"; Could not parse metadata")
+                            meta = {'title': f}
+                            pass
+                    # Value of the entry (the key) is it's metadata
                     subdir[f] = meta
             parent = nested_dir
             for fold in folders[:-1]:
