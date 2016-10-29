@@ -58,7 +58,6 @@ class Builder:
     def build_index(self, folder):
         folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
         nested_dir = self.indx.index_dir(folder_path)
-        conf = self.c.get_conf(folder_path)
         # if consequitive directory, file.md does not exists
         #   list the folder name
         # else
@@ -67,6 +66,7 @@ class Builder:
         folder = folder_path.rstrip(os.sep)
         start = folder.rfind(os.sep) + 1
         for root, dirs, files in os.walk(folder_path):
+            conf = self.c.get_conf(root)
             index = {'posts': [], 'collections': []}
             dir_post = os.path.basename(root) + '.md'
             if 'index.md' in files or dir_post in files:
@@ -95,6 +95,8 @@ class Builder:
                 if post:
                     # It's a single post
                     # print('Found a post: ' + post['title'])
+                    if not post.get('title', None) or not post.get('date', None):
+                        continue
                     try:
                         if post['title'].startswith('"') and post['title'].endswith('"'):
                             post['title'] = post['title'][1:-1]
