@@ -1,15 +1,60 @@
 # dystic
 
-Minimal static site generator specialized for blogging.
+Intuitive static site generator. What you see is what you get.
 
-**NOTE**
+No specific `content`, `media`, or `static` folders. Just take
+any existing directory on your system and turn it into a static
+web site.
 
-* v0.X.X  
-    - Supports a subset of functionality.  
-* v1.X.X  
-    - Will introduce major changes, mainly to the structure
-      and index generation.  
-    - Read [development_references-v1](https://github.com/oxalorg/dystic/blob/master/development_reference-v1.md) for changes is dystic-v1.
+So in the following directory:
+
+```
+website ➴ tree .
+.
+├── notes
+│   └── my-name-is-john-cena.md
+├── recipies
+│   ├── my-top-3-vegan-snacks.md
+│   └── yummy-veg-wraps.md
+└── reviews
+    ├── hardware
+    │   └── mac-book-air-13-review.md
+    ├── software
+    │   └── dystic-static-generator-is-awesome.md
+    └── triple-cheese-pizza-420.md
+```
+
+The *page* for yummy veg wrap recipies will get built at 
+`www.website.com/recipies/yummy-veg-wraps`
+
+The *page* for the mac book review will be viewable at
+`www.website.com/reviews/hardware/mac-book-air-13-review`
+
+and finally the page for the review of that delicious tripple
+cheese pizza I had last week will be generated at:
+`www.website.com/reviews/triple-cheese-pizza-420`
+
+Configurations for ***any*** part of the website can be
+changed by adding a `_config.yml` in the respective folders.
+
+So I could add `_config.yml` with `layout: review` inside the
+`website/reviews` directory, and then add another `_config.yml`
+with `layout: fancy-reviews` inside `webiste/reviews/hardware`
+to overwrite the layout values for all content under hardware.
+
+This recursive configuration makes it very easy to maintain
+certain parts of your website. Giving each part a different
+look, feel, and configuration.
+
+Some uses of `dystic`:
+
+- ANY static website.
+- Notes. I replaced *EverNote* with *dystic* on my `~/notes`
+  directory
+- Blogs. Works amazingly for blogs since it auto indexes
+  a collection of posts.
+
+Read more about the *philosophy*: [development_references-v1](https://github.com/oxalorg/dystic/blob/master/development_reference-v1.md)
 
 ## Quickstart
 
@@ -26,10 +71,7 @@ pip3 install dystic
 ```
 mkdir my-notes
 cd my-notes
-
 ```
-
-
 
 ## Usage
 
@@ -52,7 +94,7 @@ dystic -r ~/my-blog -b o/reviews/food/dunkin-donuts/simply-potato
 
 ## Example
 
-Example directory:
+Example file system structure of my personal blog:
 
 ```
 .
