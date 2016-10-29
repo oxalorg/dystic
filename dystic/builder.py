@@ -22,9 +22,9 @@ class Builder:
     def build_dir(self, folder):
         folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
         print('Building folder: ' + folder_path)
-        conf = self.c.get_conf(folder_path)
-        default_layout = self.c.get_val(folder_path, 'layout')
         for root, dirs, files in os.walk(folder_path):
+            conf = self.c.get_conf(root)
+            default_layout = self.c.get_val(root, 'layout')
             for f in files:
                 # Is the post a containment inside the folder
                 # i.e. same name as parent folder or not
@@ -45,7 +45,7 @@ class Builder:
                     fconf = conf.copy()
                     par_tree = self.get_parent_tree(root, post_folder=post_folder)
                     fconf['tree'] = par_tree
-                    print(par_tree)
+                    # print(par_tree)
                     fconf.update(metadata)
                     layout = fconf.get('layout', default_layout)
                     out_file = os.path.abspath(
