@@ -31,7 +31,7 @@ class Builder:
                 post_folder = False
                 # only supports .md files atm
                 if os.path.splitext(f)[1] == '.md':
-                    print('Considering: ' + f)
+                    # print('Considering: ' + f)
                     if os.path.splitext(f)[0] == os.path.basename(root):
                         post_folder = True
                     in_file = os.path.abspath(os.path.join(root, f))
@@ -43,15 +43,17 @@ class Builder:
                         print("Skipping file: " + in_file + " ; Metadata invalid.")
                         continue
                     fconf = conf.copy()
+                    par_tree = self.get_parent_tree(root, post_folder=post_folder)
+                    fconf['tree'] = par_tree
+                    print(par_tree)
                     fconf.update(metadata)
                     layout = fconf.get('layout', default_layout)
-                    print(f, layout, fconf)
                     out_file = os.path.abspath(
                                 os.path.join(root, \
                                 'index.html' if post_folder else os.path.splitext(f)[0] + '.html'))
                     with open(out_file, 'w', encoding='utf-8', errors='replace') as fp:
                         fp.write(self.tmplt.render(content, layout, fconf))
-                    print('File written: ' + out_file)
+                    # print('File written: ' + out_file)
 
     def build_index(self, folder):
         folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
@@ -112,8 +114,29 @@ class Builder:
                 aconf.update({'posts': utils.sort_list_dict(index['posts']), 'collections': index['collections']})
                 with open(out_file, 'w', encoding='utf-8', errors='replace') as fp:
                     fp.write(self.tmplt.render('', 'index', aconf))
-                print('Index written: ' + out_file)
+                # print('Index written: ' + out_file)
         return index
+
+    def get_parent_tree(self, fn, post_folder=False):
+        fn = os.path.abspath(fn)
+        parfn = os.path.join(fn, os.pardir) if post_folder else os.path.dirname(fn)
+        flist = os.listdir(parfn)
+        reg = re.compile('.*\.md$')
+
+        startpath = os.path.relpath(
+                parfn,
+                os.path.join(self.ROOT_DIR_PATH, os.pardir))
+
+        par_tree = {'posts': [], 'collections': []}
+        for f in flist:
+            if reg.match(f) or f == 'res' or f.startswith('.') or f.startswith('_'):
+                continue
+            elif os.path.isdir(f):
+                par_tree['collections'].append(os.path.join(startpath, f))
+            else:
+                par_tree['posts'].append(os.path.join(startpath, f))
+
+        return par_tree
 
 
 if __name__ == '__main__':
