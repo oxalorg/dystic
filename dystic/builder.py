@@ -18,6 +18,7 @@ class Builder:
         self.tmplt = Templater(self.ROOT_DIR_PATH)
         self.c = Configurator(self.ROOT_DIR_PATH)
         self.indx = Indexer(self.ROOT_DIR_PATH)
+        self.nested_dir = self.indx.index_dir(self.ROOT_DIR_PATH)
 
     def build_dir(self, folder):
         folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
@@ -57,7 +58,6 @@ class Builder:
 
     def build_index(self, folder):
         folder_path = os.path.abspath(os.path.join(self.ROOT_DIR_PATH, folder))
-        nested_dir = self.indx.index_dir(folder_path)
         # if consequitive directory, file.md does not exists
         #   list the folder name
         # else
@@ -73,7 +73,7 @@ class Builder:
                 print("Skipping index generation for post: {}".format(root))
                 continue
             folders = root[start:].split(os.sep)
-            parent = nested_dir
+            parent = self.nested_dir
             for fold in folders[:-1]:
                 parent = parent.get(fold)
             parent = parent[folders[-1]]
